@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Футбольный справочник</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_text">Выберите команду по которой хотите просмотреть информацию</string>
+    <string name="show_all_team">Просмотреть по всем командам</string>
+    <string name="choose">Выбрать</string>
+    <string name="all">Все команды</string>
+    <string name="tv_main">Это футбольный справочник. Здесь вы можете узнать результаты матчей  английской премьер-лиги.
+        Просто выберите команду, результат которой вы хотите просмотреть. Также можно отфильтровать по дате или же по туру.</string>
+    <string name="date">date</string>
+    <string name="score">score</string>
+    <string name="tour">tour</string>
+    <string name="sec_team">Sec_Team</string>
+    <string name="first_team">First_Team</string>
+</resources>
