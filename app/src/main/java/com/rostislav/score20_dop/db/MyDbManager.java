@@ -3,7 +3,9 @@ package com.rostislav.score20_dop.db;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.rostislav.score20_dop.MainActivity;
 import com.rostislav.score20_dop.frag.Main_frag;
@@ -12,21 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyDbManager {
-    private Context context;
+    public Context context;
     private MyDbHelper myDbHelper;
     private SQLiteDatabase db;
-
     public MyDbManager(Context context) {
         this.context = context;
         myDbHelper = new MyDbHelper(context);
     }
 
 
+    public boolean isEmpty(String TableName){
 
+        SQLiteDatabase database = myDbHelper.getReadableDatabase();
+        return (int) DatabaseUtils.queryNumEntries(database,TableName) == 0;
+    }
 
 
     public void openDb() {
-        db = myDbHelper.getWritableDatabase();
+       db = myDbHelper.getWritableDatabase();
+        Log.d("MyLog2","open db dbmanager");
     }
 
     public void insertToDb(String fst_team, String sec_team, String score, String date, String tour) {
@@ -64,5 +70,6 @@ public class MyDbManager {
 
     public void closeDb() {
         myDbHelper.close();
+
     }
 }

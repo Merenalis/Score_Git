@@ -130,7 +130,7 @@
                 android:textAlignment="textEnd"
                 android:textAllCaps="true"
                 android:textColor="#EFEDED"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold|italic" />
         </LinearLayout>
 

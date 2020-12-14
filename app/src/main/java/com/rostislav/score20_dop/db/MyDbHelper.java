@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.rostislav.score20_dop.frag.Main_frag;
 import com.rostislav.score20_dop.item.Item;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class MyDbHelper extends SQLiteOpenHelper {
     public MyDbHelper(@Nullable Context context) {
         super(context, MyConstants.DB_NAME, null, MyConstants.DB_VERSION);
     }
-
 
     @Override
     public void onCreate(SQLiteDatabase db) {

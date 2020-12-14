@@ -2,23 +2,18 @@ package com.rostislav.score20_dop.frag;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.rostislav.score20_dop.MainActivity;
+import com.rostislav.score20_dop.Parse_Controller;
 import com.rostislav.score20_dop.R;
-import com.rostislav.score20_dop.adapters.MyAdapter;
 import com.rostislav.score20_dop.db.MyConstants;
 import com.rostislav.score20_dop.db.MyDbHelper;
 import com.rostislav.score20_dop.db.MyDbManager;
@@ -32,22 +27,23 @@ import java.io.IOException;
 
 
 public class Main_frag extends Fragment implements View.OnClickListener {
-    private MyDbManager myDbManager;
-    private ImageView img1;
-    Context context;
-    public Element first_team;
-    public Element score;
-    public Element sec_team;
-    public Element date;
-    public String tour;
-    private Document doc;
-    private Thread secThread;
-    private Runnable runnable;
-    private MyAdapter myAdapter;
-    private int count = 1;
+    public MyDbManager myDbManager = new MyDbManager(getContext());
     private MyDbHelper myDbHelper;
-    private MyConstants myConstants;
-    private TextView tv_main, tv_all;
+    private ImageView img1;
+    private Element first_team;
+    private Element score;
+    private Element sec_team;
+    private Element date;
+    private String tour;
+    private Document doc;
+    private Runnable runnable;
+    private int count = 1;
+    private Thread secThread;
+    private TextView tv_all;
+
+    public Context context;
+    private Parse_Controller parse_controller;
+
     public Main_frag() {
     }
 
@@ -55,50 +51,55 @@ public class Main_frag extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
         tv_all = view.findViewById(R.id.tv_all);
         img1 = view.findViewById(R.id.img1);
         img1.setOnClickListener(this);
         tv_all.setOnClickListener(this);
         myDbManager = new MyDbManager(container.getContext());
+        myDbHelper = new MyDbHelper(container.getContext());
+        context = container.getContext();
+        parse_controller = new Parse_Controller();
         return view;
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-       switch (view.getId()){
-
-           case R.id.tv_all:{
-               if (mainActivity != null) {
-                   mainActivity.setTextViewFragment2Text();
-               }
-           }
-       }
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
         myDbManager.openDb();
-        init();
+            if (myDbManager.isEmpty(MyConstants.TABLE_NAME)) {
+            init();
+        }
     }
 
-    private void init() {
+
+    public void init() {
         runnable = new Runnable() {
             @Override
             public void run() {
                 getWeb();
+
+
             }
         };
         secThread = new Thread(runnable);
         secThread.start();
     }
 
+    @Override
+    public void onClick(View view) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        switch (view.getId()) {
 
-    private void getWeb() {
+            case R.id.tv_all: {
+                if (mainActivity != null) {
+                    mainActivity.setTextViewFragment2Text();
+                }
+            }
+        }
+
+    }
+
+    public void getWeb() {
 
         try {
             doc = Jsoup.connect("https://www.ua-football.com/foreign/england/matches").get();
@@ -120,10 +121,8 @@ public class Main_frag extends Fragment implements View.OnClickListener {
                     first_team = first_team_elements.get(1); // cчет
                     score = first_team_elements.get(2); // название второй команды
                     sec_team = first_team_elements.get(3); // дата
-                    if (myDbManager.getFromDb().size() == 100) {
 
-                    } else
-                        onClickSave();
+                    onClickSave();
                 }
             }
         } catch (IOException e) {
@@ -132,14 +131,9 @@ public class Main_frag extends Fragment implements View.OnClickListener {
     }
 
     public void onClickSave() {
+
         myDbManager.insertToDb(first_team.text(), sec_team.text(), score.text(), date.text(), tour);
     }
-
-  /*  @Override
-    public void onDestroy() {
-        super.onDestroy();
-        myDbManager.closeDb();
-    }*/
 
     @Override
     public void onDestroyView() {
