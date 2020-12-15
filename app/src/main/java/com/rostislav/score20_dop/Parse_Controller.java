@@ -1,5 +1,6 @@
-
 package com.rostislav.score20_dop;
+
+import android.content.Context;
 
 import com.rostislav.score20_dop.db.MyDbManager;
 import com.rostislav.score20_dop.frag.Main_frag;
@@ -20,9 +21,14 @@ public class Parse_Controller {
     private Document doc;
     private Runnable runnable;
     private int count = 1;
-private Main_frag main_frag = new Main_frag();
+private Main_frag main_frag;
+    private MyDbManager myDbManager;
 
-private MyDbManager myDbManager = new MyDbManager(main_frag.getContext());
+    public Parse_Controller(MyDbManager myDbManager) {
+        this.myDbManager = myDbManager;
+
+    }
+
     public void getWeb() {
 
         try {
@@ -46,7 +52,7 @@ private MyDbManager myDbManager = new MyDbManager(main_frag.getContext());
                     score = first_team_elements.get(2); // название второй команды
                     sec_team = first_team_elements.get(3); // дата
 
-                   onClickSave();
+                    onClickSave();
                 }
             }
         } catch (IOException e) {
@@ -58,4 +64,3 @@ private MyDbManager myDbManager = new MyDbManager(main_frag.getContext());
         myDbManager.insertToDb(first_team.text(), sec_team.text(), score.text(), date.text(), tour);
     }
 }
-
